@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include "math.h"
+#include<math.h>
+
+int main()
+{
+//testing our programs
+int sum;
+sum = add(5, 6);
+printf("The sum of the two numbers is: %d\n", sum);
+
+quad(2, 5, 3);
+
+    return 0;
+}
+
+//this file contains all the mathematical operations
+
+//addition
+
+int add(int a, int b)
+{
+    return a + b;
+}
+
+int sub(int a, int b)
+{
+    return a - b;
+}
+
+long long mul(int a, int b)
+{
+    return (long long )a * b;
+}
+
+float div(int a, int b)
+{
+    return (float)a / b;
+}
+
+void quad(int a, int b, int c){
+
+	int D;
+	float x1;
+	float x2;
+	D = sqrt(b*b - 4*a*c);
+	x1 = (-b + D) / 2*a;
+	x2 = (-b - D) / 2*a;
+
+	printf("The roots of the equation is %d & %d and D is %d", x1, x2, D);
+}

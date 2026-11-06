@@ -1,0 +1,1 @@
+## This directory will contain various embedded systems projects not particular to any microcontroller yet but mainly ATMega, STM32 and Stellaris

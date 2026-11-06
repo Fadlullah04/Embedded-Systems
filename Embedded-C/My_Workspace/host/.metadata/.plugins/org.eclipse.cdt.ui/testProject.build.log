@@ -1,0 +1,9 @@
+11:20:39 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+
+11:20:39 Build Failed. 1 errors, 0 warnings. (took 221ms)
+

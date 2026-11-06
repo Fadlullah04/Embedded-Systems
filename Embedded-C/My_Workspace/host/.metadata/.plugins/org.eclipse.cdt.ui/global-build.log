@@ -1,0 +1,711 @@
+06:36:30 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'main':
+..\main.c:12:14: error: expected ';' before 'return'
+   12 | quad(2, 5, 3)
+      |              ^
+      |              ;
+......
+   15 |     return 0;
+      |     ~~~~~~    
+06:36:49 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+06:37:16 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+06:41:59 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+06:43:35 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'quad':
+..\main.c:50:47: warning: format '%d' expects argument of type 'int', but argument 2 has type 'double' [-Wformat=]
+   50 |         printf("The roots of the equation is %d & %d and D is %d", x1, x2, D);
+      |                                              ~^                    ~~
+      |                                               |                    |
+      |                                               int                  double
+      |                                              %f
+..\main.c:50:52: warning: format '%d' expects argument of type 'int', but argument 3 has type 'double' [-Wformat=]
+   50 |         printf("The roots of the equation is %d & %d and D is %d", x1, x2, D);
+      |                                                   ~^                   ~~
+      |                                                    |                   |
+      |                                                    int                 double
+      |                                                   %f
+gcc -o testProject.exe main.o 
+06:44:25 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+07:13:33 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'quad':
+..\main.c:50:64: warning: format '%d' expects argument of type 'int', but argument 4 has type 'double' [-Wformat=]
+   50 |         printf("The roots of the equation is %f & %f and D is %d", x1, x2, D);
+      |                                                               ~^           ~
+      |                                                                |           |
+      |                                                                int         double
+      |                                                               %f
+gcc -o testProject.exe main.o 
+07:13:53 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+07:15:05 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+07:17:02 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'quad':
+..\main.c:47:20: error: expected ';' before 'x1'
+   47 |         d = sqrt(D)
+      |                    ^
+      |                    ;
+   48 |         x1 = (-b + d) / (2*a);
+      |         ~~          
+07:17:08 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+07:40:06 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+In file included from ..\main.c:5:
+C:/msys64/ucrt64/include/stdlib.h:332:17: error: conflicting types for 'div'; have 'div_t(int,  int)' {aka 'struct _div_t(int,  int)'}
+  332 |   div_t __cdecl div(int _Numerator,int _Denominator);
+      |                 ^~~
+In file included from ..\main.c:2:
+..\math.h:14:8: note: previous declaration of 'div' with type 'float(int,  int)'
+   14 | float  div(int a, int b);
+      |        ^~~
+..\main.c: In function 'quad':
+..\main.c:51:17: error: implicit declaration of function 'negative_complex' [-Wimplicit-function-declaration]
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c:52:9: error: too few arguments to function 'exit'; expected 1, have 0
+   52 |         exit();
+      |         ^~~~
+C:/msys64/ucrt64/include/stdlib.h:274:32: note: declared here
+  274 |   void __cdecl __MINGW_NOTHROW exit(int _Code) __MINGW_ATTRIB_NORETURN;
+      |                                ^~~~
+..\main.c: At top level:
+..\main.c:62:7: error: conflicting types for 'negative_complex'; have 'float()'
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:51:17: note: previous implicit declaration of 'negative_complex' with type 'int()'
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c: In function 'negative_complex':
+..\main.c:62:7: warning: old-style function definition [-Wold-style-definition]
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:62:7: error: type of 'negative' defaults to 'int' [-Wimplicit-int]
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+07:40:16 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+In file included from ..\main.c:5:
+C:/msys64/ucrt64/include/stdlib.h:332:17: error: conflicting types for 'div'; have 'div_t(int,  int)' {aka 'struct _div_t(int,  int)'}
+  332 |   div_t __cdecl div(int _Numerator,int _Denominator);
+      |                 ^~~
+In file included from ..\main.c:2:
+..\math.h:14:8: note: previous declaration of 'div' with type 'float(int,  int)'
+   14 | float  div(int a, int b);
+      |        ^~~
+..\main.c: In function 'quad':
+..\main.c:51:17: error: implicit declaration of function 'negative_complex' [-Wimplicit-function-declaration]
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c:52:9: error: too few arguments to function 'exit'; expected 1, have 0
+   52 |         exit();
+      |         ^~~~
+C:/msys64/ucrt64/include/stdlib.h:274:32: note: declared here
+  274 |   void __cdecl __MINGW_NOTHROW exit(int _Code) __MINGW_ATTRIB_NORETURN;
+      |                                ^~~~
+..\main.c: At top level:
+..\main.c:62:7: error: conflicting types for 'negative_complex'; have 'float()'
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:51:17: note: previous implicit declaration of 'negative_complex' with type 'int()'
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c: In function 'negative_complex':
+..\main.c:62:7: warning: old-style function definition [-Wold-style-definition]
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:62:7: error: type of 'negative' defaults to 'int' [-Wimplicit-int]
+..\main.c:67:85: error: expected ')' before ';' token
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot);
+      |               ~                                                                     ^
+      |                                                                                     )
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot);
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:67:86: error: expected ';' before '}' token
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot);
+      |                                                                                      ^
+      |                                                                                      ;
+   68 | 
+   69 | }
+      | ~                                                                                     
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+07:40:31 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+In file included from ..\main.c:5:
+C:/msys64/ucrt64/include/stdlib.h:332:17: error: conflicting types for 'div'; have 'div_t(int,  int)' {aka 'struct _div_t(int,  int)'}
+  332 |   div_t __cdecl div(int _Numerator,int _Denominator);
+      |                 ^~~
+In file included from ..\main.c:2:
+..\math.h:14:8: note: previous declaration of 'div' with type 'float(int,  int)'
+   14 | float  div(int a, int b);
+      |        ^~~
+..\main.c: In function 'quad':
+..\main.c:51:17: error: implicit declaration of function 'negative_complex' [-Wimplicit-function-declaration]
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c:52:9: error: too few arguments to function 'exit'; expected 1, have 0
+   52 |         exit();
+      |         ^~~~
+C:/msys64/ucrt64/include/stdlib.h:274:32: note: declared here
+  274 |   void __cdecl __MINGW_NOTHROW exit(int _Code) __MINGW_ATTRIB_NORETURN;
+      |                                ^~~~
+..\main.c: At top level:
+..\main.c:62:7: error: conflicting types for 'negative_complex'; have 'float()'
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:51:17: note: previous implicit declaration of 'negative_complex' with type 'int()'
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c: In function 'negative_complex':
+..\main.c:62:7: warning: old-style function definition [-Wold-style-definition]
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:62:7: error: type of 'negative' defaults to 'int' [-Wimplicit-int]
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+07:42:13 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+In file included from ..\main.c:5:
+C:/msys64/ucrt64/include/stdlib.h:332:17: error: conflicting types for 'div'; have 'div_t(int,  int)' {aka 'struct _div_t(int,  int)'}
+  332 |   div_t __cdecl div(int _Numerator,int _Denominator);
+      |                 ^~~
+In file included from ..\main.c:2:
+..\math.h:14:8: note: previous declaration of 'div' with type 'float(int,  int)'
+   14 | float  div(int a, int b);
+      |        ^~~
+..\main.c: In function 'quad':
+..\main.c:51:17: error: implicit declaration of function 'negative_complex' [-Wimplicit-function-declaration]
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c:52:9: error: too few arguments to function 'exit'; expected 1, have 0
+   52 |         exit();
+      |         ^~~~
+C:/msys64/ucrt64/include/stdlib.h:274:32: note: declared here
+  274 |   void __cdecl __MINGW_NOTHROW exit(int _Code) __MINGW_ATTRIB_NORETURN;
+      |                                ^~~~
+..\main.c: At top level:
+..\main.c:62:7: error: conflicting types for 'negative_complex'; have 'float()'
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:51:17: note: previous implicit declaration of 'negative_complex' with type 'int()'
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c: In function 'negative_complex':
+..\main.c:62:7: warning: old-style function definition [-Wold-style-definition]
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:62:7: error: type of 'negative' defaults to 'int' [-Wimplicit-int]
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+07:42:32 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'quad':
+..\main.c:51:17: error: implicit declaration of function 'negative_complex' [-Wimplicit-function-declaration]
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c:52:9: error: too few arguments to function 'exit'; expected 1, have 0
+   52 |         exit();
+      |         ^~~~
+In file included from ..\main.c:5:
+C:/msys64/ucrt64/include/stdlib.h:274:32: note: declared here
+  274 |   void __cdecl __MINGW_NOTHROW exit(int _Code) __MINGW_ATTRIB_NORETURN;
+      |                                ^~~~
+..\main.c: At top level:
+..\main.c:62:7: error: conflicting types for 'negative_complex'; have 'float()'
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:51:17: note: previous implicit declaration of 'negative_complex' with type 'int()'
+   51 |                 negative_complex(D);
+      |                 ^~~~~~~~~~~~~~~~
+..\main.c: In function 'negative_complex':
+..\main.c:62:7: warning: old-style function definition [-Wold-style-definition]
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:62:7: error: type of 'negative' defaults to 'int' [-Wimplicit-int]
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+07:42:59 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+In file included from ..\main.c:2:
+..\math.h:16:1: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
+   16 | float negative_complex(negative);
+      | ^~~~~
+..\main.c: In function 'quad':
+..\main.c:52:9: error: too few arguments to function 'exit'; expected 1, have 0
+   52 |         exit();
+      |         ^~~~
+In file included from ..\main.c:5:
+C:/msys64/ucrt64/include/stdlib.h:274:32: note: declared here
+  274 |   void __cdecl __MINGW_NOTHROW exit(int _Code) __MINGW_ATTRIB_NORETURN;
+      |                                ^~~~
+..\main.c: In function 'negative_complex':
+..\main.c:62:7: warning: old-style function definition [-Wold-style-definition]
+   62 | float negative_complex(negative){
+      |       ^~~~~~~~~~~~~~~~
+..\main.c:62:7: error: type of 'negative' defaults to 'int' [-Wimplicit-int]
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+07:44:51 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'quad':
+..\main.c:52:9: error: too few arguments to function 'exit'; expected 1, have 0
+   52 |         exit();
+      |         ^~~~
+In file included from ..\main.c:5:
+C:/msys64/ucrt64/include/stdlib.h:274:32: note: declared here
+  274 |   void __cdecl __MINGW_NOTHROW exit(int _Code) __MINGW_ATTRIB_NORETURN;
+      |                                ^~~~
+..\main.c: In function 'negative_complex':
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+07:45:18 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:67:67: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                                                                   ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1fi%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+gcc -o testProject.exe main.o 
+07:46:11 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:67:66: warning: spurious trailing '%' in format [-Wformat=]
+   67 |         printf("The discriminant is negative and the root is: .1f%", cimag(negroot));
+      |                                                                  ^
+..\main.c:67:16: warning: too many arguments for format [-Wformat-extra-args]
+   67 |         printf("The discriminant is negative and the root is: .1f%", cimag(negroot));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+gcc -o testProject.exe main.o 
+07:46:39 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:69:1: warning: control reaches end of non-void function [-Wreturn-type]
+   69 | }
+      | ^
+gcc -o testProject.exe main.o 
+07:47:04 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c:62:6: error: conflicting types for 'negative_complex'; have 'void(int)'
+   62 | void negative_complex(int negative){
+      |      ^~~~~~~~~~~~~~~~
+In file included from ..\main.c:2:
+..\math.h:16:7: note: previous declaration of 'negative_complex' with type 'float(int)'
+   16 | float negative_complex(int negative);
+      |       ^~~~~~~~~~~~~~~~
+07:47:18 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+07:48:21 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+07:49:02 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:67:65: error: 'D' undeclared (first use in this function)
+   67 |         printf("The discriminant is %d and the root is: %.1fi", D creal(negroot));
+      |                                                                 ^
+..\main.c:67:65: note: each undeclared identifier is reported only once for each function it appears in
+..\main.c:67:66: error: expected ')' before 'creal'
+   67 |         printf("The discriminant is %d and the root is: %.1fi", D creal(negroot));
+      |               ~                                                  ^~~~~~
+      |                                                                  )
+..\main.c:65:15: warning: unused variable 'negroot' [-Wunused-variable]
+   65 |         float negroot = csqrt(neg_real);
+      |               ^~~~~~~
+07:49:09 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:67:65: error: 'D' undeclared (first use in this function)
+   67 |         printf("The discriminant is %d and the root is: %.1fi", D, creal(negroot));
+      |                                                                 ^
+..\main.c:67:65: note: each undeclared identifier is reported only once for each function it appears in
+07:49:35 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:08:18 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c:63:6: error: conflicting types for 'negative_complex'; have 'void(float)'
+   63 | void negative_complex(float negative){
+      |      ^~~~~~~~~~~~~~~~
+In file included from ..\main.c:2:
+..\math.h:16:6: note: previous declaration of 'negative_complex' with type 'void(int)'
+   16 | void negative_complex(int negative);
+      |      ^~~~~~~~~~~~~~~~
+..\main.c: In function 'negative_complex':
+..\main.c:68:38: warning: format '%d' expects argument of type 'int', but argument 2 has type 'double' [-Wformat=]
+   68 |         printf("The discriminant is %d and the root is: %.1fi", negative, cimag(negroot));
+      |                                     ~^                          ~~~~~~~~
+      |                                      |                          |
+      |                                      int                        double
+      |                                     %f
+08:08:27 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c:63:6: error: conflicting types for 'negative_complex'; have 'void(float)'
+   63 | void negative_complex(float negative){
+      |      ^~~~~~~~~~~~~~~~
+In file included from ..\main.c:2:
+..\math.h:16:6: note: previous declaration of 'negative_complex' with type 'void(int)'
+   16 | void negative_complex(int negative);
+      |      ^~~~~~~~~~~~~~~~
+08:08:46 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:09:24 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+08:09:55 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:10:58 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:42:53 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:51:59 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:69:16: error: 'b' undeclared (first use in this function)
+   69 |         x1 = (-b + negroot) / (2*a);
+      |                ^
+..\main.c:69:16: note: each undeclared identifier is reported only once for each function it appears in
+..\main.c:69:34: error: 'a' undeclared (first use in this function)
+   69 |         x1 = (-b + negroot) / (2*a);
+      |                                  ^
+..\main.c:66:27: warning: variable 'x2' set but not used [-Wunused-but-set-variable=]
+   66 |         float complex x1, x2;
+      |                           ^~
+08:52:18 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:70:16: error: 'b' undeclared (first use in this function)
+   70 |         x1 = (-b + negroot) / (2*a);
+      |                ^
+..\main.c:70:16: note: each undeclared identifier is reported only once for each function it appears in
+..\main.c:66:27: warning: variable 'x2' set but not used [-Wunused-but-set-variable=]
+   66 |         float complex x1, x2;
+      |                           ^~
+08:52:26 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:66:27: warning: variable 'x2' set but not used [-Wunused-but-set-variable=]
+   66 |         float complex x1, x2;
+      |                           ^~
+..\main.c:70:15: warning: 'b' is used uninitialized [-Wuninitialized]
+   70 |         x1 = (-b + negroot) / (2*a);
+      |               ^~
+..\main.c:67:16: note: 'b' was declared here
+   67 |         int a, b;
+      |                ^
+..\main.c:70:33: warning: 'a' is used uninitialized [-Wuninitialized]
+   70 |         x1 = (-b + negroot) / (2*a);
+      |                               ~~^~~
+..\main.c:67:13: note: 'a' was declared here
+   67 |         int a, b;
+      |             ^
+gcc -o testProject.exe main.o 
+08:54:14 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:67:13: error: 'a' redeclared as different kind of symbol
+   67 |         int a, b;
+      |             ^
+..\main.c:63:43: note: previous definition of 'a' with type 'int'
+   63 | void negative_complex(float negative, int a, int b){
+      |                                       ~~~~^
+..\main.c:67:16: error: 'b' redeclared as different kind of symbol
+   67 |         int a, b;
+      |                ^
+..\main.c:63:50: note: previous definition of 'b' with type 'int'
+   63 | void negative_complex(float negative, int a, int b){
+      |                                              ~~~~^
+..\main.c:66:27: warning: variable 'x2' set but not used [-Wunused-but-set-variable=]
+   66 |         float complex x1, x2;
+      |                           ^~
+08:54:35 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:66:27: warning: variable 'x2' set but not used [-Wunused-but-set-variable=]
+   66 |         float complex x1, x2;
+      |                           ^~
+gcc -o testProject.exe main.o 
+08:55:15 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:66:27: warning: variable 'x2' set but not used [-Wunused-but-set-variable=]
+   66 |         float complex x1, x2;
+      |                           ^~
+gcc -o testProject.exe main.o 
+08:55:36 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:56:12 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:56:50 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:57:29 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+08:57:43 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+09:00:19 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+09:00:44 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+09:01:21 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+09:02:18 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:72:119: error: invalid suffix 'printf' on integer constant
+   72 |         printf("The discriminant is negative -> %.1f and the root is: %.5f -  %.5fi", negative, creal(x2), cimag(x2)*-1printf("The discriminant is negative -> %.1f and the root is: %.2fi %.2fi", negative, creal(x1), cimag(x1)););
+      |                                                                                                                       ^~~~~~~
+..\main.c:72:227: error: expected ')' before ';' token
+   72 |         printf("The discriminant is negative -> %.1f and the root is: %.5f -  %.5fi", negative, creal(x2), cimag(x2)*-1printf("The discriminant is negative -> %.1f and the root is: %.2fi %.2fi", negative, creal(x1), cimag(x1)););
+      |               ~                                                                                                                                                                                                                   ^
+      |                                                                                                                                                                                                                                   )
+09:02:39 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+09:02:49 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+09:15:52 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+09:16:15 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+..\main.c: In function 'negative_complex':
+..\main.c:71:74: warning: unknown conversion type character '+' in format [-Wformat=]
+   71 |         printf("The discriminant is negative -> %.1f and the root is: %.5+f%.5fi\n", negative, creal(x1), cimag(x1));
+      |                                                                          ^
+..\main.c:71:16: warning: too many arguments for format [-Wformat-extra-args]
+   71 |         printf("The discriminant is negative -> %.1f and the root is: %.5+f%.5fi\n", negative, creal(x1), cimag(x1));
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gcc -o testProject.exe main.o 
+09:16:42 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o 
+Info: Nothing to build for testProject
+11:17:23 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o typecasting.o "..\\typecasting.c" 
+..\typecasting.c: In function 'main':
+..\typecasting.c:11:30: warning: unsigned conversion from 'int' to 'unsigned char' changes value from '65415' to '135' [-Woverflow]
+   11 |         unsigned char data = 0x87 + 0xFF00;
+      |                              ^~~~
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o main.o "..\\main.c" 
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+11:17:56 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o typecasting.o "..\\typecasting.c" 
+..\typecasting.c: In function 'main':
+..\typecasting.c:11:30: warning: conversion from 'unsigned int' to 'unsigned char' changes value from '65415' to '135' [-Woverflow]
+   11 |         unsigned char data = (unsigned int)0x87 + 0xFF00;
+      |                              ^
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+11:17:59 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+11:18:16 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -o typecasting.o "..\\typecasting.c" 
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+11:18:33 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+11:20:30 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+11:20:31 **** Build of configuration Debug for project typecasting ****
+make all 
+Cannot run program "make": Launching failed
+
+Error: Program "make" not found in PATH
+PATH=[C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE//plugins/com.st.stm32cube.ide.jre.win64_3.4.0.202409160955/jre/bin/server;C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE//plugins/com.st.stm32cube.ide.jre.win64_3.4.0.202409160955/jre/bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\MATLAB\R2024b\runtime\win64;C:\Program Files\MATLAB\R2024b\bin;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\IN\AppData\Local\Microsoft\WindowsApps;C:\Users\IN\AppData\Local\Python\bin;C:\Users\IN\AppData\Local\Programs\Microsoft VS Code\bin;C:\msys64\ucrt64\bin;C:\Users\IN\AppData\Roaming\npm;C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE]
+11:20:39 **** Incremental Build of configuration Debug for project testProject ****
+Info: Internal Builder is used for build
+gcc -o testProject.exe main.o typecasting.o 
+C:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: typecasting.o: in function `main':
+C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../typecasting.c:10: multiple definition of `main'; main.o:C:/FadlullahGithub/Embedded-C/My_Workspace/host/testProject/Debug/../main.c:8: first defined here
+collect2.exe: error: ld returned 1 exit status
+11:20:39 **** Incremental Build of configuration Debug for project typecasting ****
+make all 
+Cannot run program "make": Launching failed
+
+Error: Program "make" not found in PATH
+PATH=[C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE//plugins/com.st.stm32cube.ide.jre.win64_3.4.0.202409160955/jre/bin/server;C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE//plugins/com.st.stm32cube.ide.jre.win64_3.4.0.202409160955/jre/bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\MATLAB\R2024b\runtime\win64;C:\Program Files\MATLAB\R2024b\bin;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\IN\AppData\Local\Microsoft\WindowsApps;C:\Users\IN\AppData\Local\Python\bin;C:\Users\IN\AppData\Local\Programs\Microsoft VS Code\bin;C:\msys64\ucrt64\bin;C:\Users\IN\AppData\Roaming\npm;C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE]

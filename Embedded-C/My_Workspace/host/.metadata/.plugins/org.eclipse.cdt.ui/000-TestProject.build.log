@@ -1,0 +1,9 @@
+16:35:28 **** Incremental Build of configuration Debug for project 000-TestProject ****
+make all 
+Cannot run program "make": Launching failed
+
+Error: Program "make" not found in PATH
+PATH=[C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE//plugins/com.st.stm32cube.ide.jre.win64_3.4.0.202409160955/jre/bin/server;C:/ST/STM32CubeIDE_1.19.0/STM32CubeIDE//plugins/com.st.stm32cube.ide.jre.win64_3.4.0.202409160955/jre/bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\MATLAB\R2024b\runtime\win64;C:\Program Files\MATLAB\R2024b\bin;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Users\IN\AppData\Local\Microsoft\WindowsApps;C:\Users\IN\AppData\Local\Python\bin;C:\Users\IN\AppData\Local\Programs\Microsoft VS Code\bin;C:\msys64\ucrt64\bin;C:\Users\IN\AppData\Roaming\npm;C:\ST\STM32CubeIDE_1.19.0\STM32CubeIDE]
+
+16:35:28 Build Failed. 1 errors, 0 warnings. (took 94ms)
+
