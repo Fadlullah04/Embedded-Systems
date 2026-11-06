@@ -106,7 +106,7 @@ QR pass --> Camera --> OpenCV + PyZbar --> Cloud lookup (website/database)
 
 ```bash
 git clone https://github.com/Fadlullah04/Embedded-Systems.git
-cd Embedded-Systems
+cd Projects/
 
 pip install opencv-python pyzbar pyserial
 # TODO: or: pip install -r requirements.txt
@@ -138,7 +138,7 @@ python scannerfile.py
 ├── scannerfile.py/        # Python QR scanner (OpenCV + PyZbar)
 |__ logicfile.py/          # Scanner logic and website tunnel
 ├── index.html/        # Management site and database
-├── docs/           # Diagrams, photos, report
+├── docs/           # report
 └── README.md
 ```
 
