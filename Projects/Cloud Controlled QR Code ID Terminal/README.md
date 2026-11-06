@@ -52,7 +52,7 @@ This project aims to be a practical alternative, built around three goals:
 2. The ID is converted to a QR code and printed on a disposable pass, together with the student's credentials and the exams they are taking.
 3. At the entrance, the pass is scanned. A camera captures the frame, OpenCV handles the image and PyZbar decodes the QR code into a string.
 4. The decoded string is sent to the cloud, which searches for a match and checks the scan limit.
-5. If a match is found and the scan limit has not been reached, the result is sent to the Arduino over USB serial at 9600 baud.
+5. If a match is found and the scan limit has not been reached, the result is sent to the Arduino over USB serial at 9600 baud(pyserial library communication).
 6. The display shows the student's name and course. If there is no match or the limit is exceeded, access is denied.
 
 ```
@@ -106,10 +106,8 @@ QR pass --> Camera --> OpenCV + PyZbar --> Cloud lookup (website/database)
 
 ```bash
 git clone https://github.com/Fadlullah04/Embedded-Systems.git
-cd Embedded-Systems
-
+cd Projects/Cloud Controlled QR Code ID Terminal
 pip install opencv-python pyzbar pyserial
-# TODO: or: pip install -r requirements.txt
 ```
 
 ### Arduino
@@ -127,7 +125,6 @@ pip install opencv-python pyzbar pyserial
 ```bash
 python scannerfile.py 
 ```
-
 4. Hold the pass up to the camera. The display shows the student's name and course on a match.
 
 ## Project Structure
