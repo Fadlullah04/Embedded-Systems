@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Student Registry — Firebase Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Space Grotesk', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        bg: '#0c0f14',
+        surface: '#141820',
+        card: '#1a1f2b',
+        border: '#2a3040',
+        fg: '#e8ecf4',
+        muted: '#6b7a94',
+        accent: '#00e5a0',
+        accentDim: '#00b37d',
+        danger: '#ff4d6a',
+        warn: '#ffb833',
+        info: '#33b5ff',
+      }
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --bg: #0c0f14;
+    --surface: #141820;
+    --card: #1a1f2b;
+    --border: #2a3040;
+    --fg: #e8ecf4;
+    --muted: #6b7a94;
+    --accent: #00e5a0;
+    --accent-dim: #00b37d;
+    --danger: #ff4d6a;
+    --warn: #ffb833;
+    --info: #33b5ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  .bg-mesh {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 600px 400px at 15% 20%, rgba(0,229,160,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 500px at 85% 80%, rgba(51,181,255,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 300px at 50% 50%, rgba(255,77,106,0.03) 0%, transparent 70%);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* Input styles */
+  .input-field {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--fg);
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.875rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    outline: none;
+  }
+  .input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,229,160,0.12);
+  }
+  .input-field::placeholder { color: var(--muted); opacity: 0.7; }
+
+  /* Button base */
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 0.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .btn-primary:hover { background: var(--accent-dim); }
+  .btn-secondary {
+    background: var(--card);
+    color: var(--fg);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--muted); background: var(--surface); }
+  .btn-danger {
+    background: rgba(255,77,106,0.12);
+    color: var(--danger);
+    border: 1px solid rgba(255,77,106,0.2);
+  }
+  .btn-danger:hover { background: rgba(255,77,106,0.2); }
+  .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.78rem; }
+  .btn-icon {
+    padding: 0.4rem; width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 0.4rem; border: 1px solid var(--border);
+    background: var(--card); color: var(--muted); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-icon:hover { color: var(--fg); border-color: var(--muted); }
+
+  /* Toast */
+  .toast-container {
+    position: fixed; top: 1.5rem; right: 1.5rem; z-index: 9999;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .toast {
+    padding: 0.75rem 1.1rem;
+    border-radius: 0.5rem;
+    font-size: 0.84rem;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 0.6rem;
+    animation: toastIn 0.3s ease-out;
+    max-width: 380px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .toast-success { background: #0d2e22; color: var(--accent); border: 1px solid rgba(0,229,160,0.2); }
+  .toast-error { background: #2e0d16; color: var(--danger); border: 1px solid rgba(255,77,106,0.2); }
+  .toast-info { background: #0d1f2e; color: var(--info); border: 1px solid rgba(51,181,255,0.2); }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Modal overlay */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+    width: 90%; max-width: 520px;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.25s;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-overlay.active .modal-box {
+    transform: translateY(0) scale(1);
+  }
+
+  /* Table */
+  .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .data-table thead th {
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+    background: var(--card);
+    z-index: 2;
+  }
+  .data-table tbody tr {
+    transition: background 0.15s;
+  }
+  .data-table tbody tr:hover {
+    background: rgba(0,229,160,0.03);
+  }
+  .data-table tbody td {
+    padding: 0.65rem 0.9rem;
+    font-size: 0.84rem;
+    border-bottom: 1px solid rgba(42,48,64,0.5);
+    vertical-align: middle;
+  }
+
+  /* Stat card */
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.65rem;
+    padding: 1.2rem 1.4rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--muted); }
+  .stat-card .stat-icon {
+    width: 38px; height: 38px;
+    border-radius: 0.45rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem;
+    margin-bottom: 0.85rem;
+  }
+  .stat-card .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-card .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  /* Pulse dot */
+  .pulse-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+  }
+  .pulse-dot::after {
+    content: '';
+    position: absolute; inset: -3px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .pulse-dot.green { background: var(--accent); }
+  .pulse-dot.green::after { border: 1px solid var(--accent); }
+  .pulse-dot.red { background: var(--danger); }
+  .pulse-dot.red::after { border: 1px solid var(--danger); }
+  .pulse-dot.yellow { background: var(--warn); }
+  .pulse-dot.yellow::after { border: 1px solid var(--warn); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 0; transform: scale(1.8); }
+  }
+
+  /* Connection setup */
+  .setup-panel {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .setup-panel .step-badge {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* QR preview in table */
+  .qr-mini {
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .qr-mini:hover { border-color: var(--accent); }
+
+  /* Tab */
+  .tab-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: none; border-top: none; border-left: none; border-right: none;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--fg); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  .empty-state i {
+    font-size: 2.5rem;
+    color: var(--border);
+    margin-bottom: 1rem;
+  }
+
+  /* Fade-in animation */
+  .fade-in {
+    animation: fadeIn 0.4s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* JSON viewer */
+  .json-viewer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    max-height: 400px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: var(--muted);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stat-grid { grid-template-columns: 1fr 1fr !important; }
+    .data-table { font-size: 0.78rem; }
+    .data-table thead th, .data-table tbody td { padding: 0.5rem 0.6rem; }
+    .hide-mobile { display: none !important; }
+  }
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr !important; }
+  }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ============ AUTH SCREEN ============ -->
+<div id="authScreen" style="position:relative; z-index:2; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem;">
+  <div class="setup-panel fade-in" style="width:100%; max-width:400px; background:var(--card); border:1px solid var(--border); border-radius:0.75rem; padding:2rem;">
+    <div style="text-align:center; margin-bottom:1.5rem;">
+      <div style="width:56px;height:56px;border-radius:0.75rem;background:linear-gradient(135deg,var(--accent),var(--info));display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+        <i class="fas fa-lock" style="font-size:1.5rem;color:var(--bg);"></i>
+      </div>
+      <h2 style="font-size:1.4rem; font-weight:700;" id="authTitle">Admin Login</h2>
+      <p style="color:var(--muted); font-size:0.85rem;" id="authSubtitle">Sign in to manage the registry</p>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label style="font-size:0.76rem; font-weight:600; color:var(--muted); display:block; margin-bottom:0.35rem;">Email</label>
+      <input id="authEmail" class="input-field" type="email" placeholder="admin@abu.edu.ng">
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <label style="font-size:0.76rem; font-weight:600; color:var(--muted); display:block; margin-bottom:0.35rem;">Password</label>
+      <input id="authPassword" class="input-field" type="password" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary" style="width:100%; justify-content:center; padding:0.75rem; font-size:0.95rem; margin-bottom:1rem;" id="authBtn" onclick="handleAuth()">Login</button>
+    
+    <div style="text-align:center; font-size:0.8rem; color:var(--muted);">
+      <span id="authToggleText">Don't have an account?</span>
+      <button style="background:none; border:none; color:var(--accent); font-weight:600; cursor:pointer; margin-left:0.3rem;" onclick="toggleAuthMode(event)">Sign Up</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div id="mainApp" style="display:none; position:relative; z-index:1; min-height:100vh;">
+
+  <!-- Top nav -->
+  <header style="background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;">
+    <div style="max-width:1280px;margin:0 auto;padding:0.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.7rem;">
+      <div style="display:flex;align-items:center;gap:0.7rem;">
+        <div style="width:34px;height:34px;border-radius:0.45rem;background:linear-gradient(135deg,var(--accent),var(--info));display:flex;align-items:center;justify-content:center;">
+          <i class="fas fa-qrcode" style="font-size:0.85rem;color:var(--bg);"></i>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:0.92rem;line-height:1.2;">QR Student Registry</div>
+          <div style="font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;">
+            <span class="pulse-dot green" id="statusDot"></span>
+            <span id="statusText">Connected</span>
+            <span style="color:var(--border);">|</span>
+            <span id="dbPathDisplay">students</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="refreshData()">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="openImportModal()">
+          <i class="fas fa-file-import"></i> Import
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="exportData()">
+          <i class="fas fa-file-export"></i> Export
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="viewRawData()">
+          <i class="fas fa-code"></i> Raw
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="logoutUser()"
+          <i class="fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;padding:1.5rem;">
+
+    <!-- Stats row -->
+    <div class="stat-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(0,229,160,0.1);color:var(--accent);"><i class="fas fa-users"></i></div>
+        <div class="stat-value" id="statTotal" style="color:var(--accent);">0</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(51,181,255,0.1);color:var(--info);"><i class="fas fa-graduation-cap"></i></div>
+        <div class="stat-value" id="statDepts" style="color:var(--info);">0</div>
+        <div class="stat-label">Departments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(255,184,51,0.1);color:var(--warn);"><i class="fas fa-clock"></i></div>
+        <div class="stat-value" id="statRecent" style="color:var(--warn);">0</div>
+        <div class="stat-label">Added Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(255,77,106,0.1);color:var(--danger);"><i class="fas fa-qrcode"></i></div>
+        <div class="stat-value" id="statQR" style="color:var(--danger);">0</div>
+        <div class="stat-label">QR Codes</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.7rem;margin-bottom:1rem;">
+      <div style="display:flex;align-items:center;gap:0.5rem;flex:1;min-width:200px;">
+        <div style="position:relative;flex:1;max-width:360px;">
+          <i class="fas fa-search" style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.8rem;"></i>
+          <input id="searchInput" class="input-field" type="text" placeholder="Search by name, ID, QR code, department..." style="padding-left:2.2rem;" oninput="filterTable()">
+        </div>
+        <select id="deptFilter" class="input-field" style="width:auto;min-width:140px;" onchange="filterTable()">
+          <option value="">All Departments</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span style="font-size:0.78rem;color:var(--muted);" id="resultCount">0 records</span>
+        <button class="btn btn-primary" onclick="openAddModal()">
+          <i class="fas fa-plus"></i> Add Student
+        </button>
+        <button class="btn btn-secondary" onclick="openBulkAddModal()" title="Bulk add from text">
+          <i class="fas fa-list"></i> Bulk
+        </button>
+      </div>
+    </div>
+
+    <!-- Table container -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:0.65rem;overflow:hidden;">
+      <div style="overflow-x:auto;max-height:60vh;overflow-y:auto;">
+        <table class="data-table" id="studentTable">
+          <thead>
+            <tr>
+              <th style="width:40px;">#</th>
+              <th style="cursor:pointer;" onclick="sortTable('name')">Name <i class="fas fa-sort" style="opacity:0.4;margin-left:0.3rem;"></i></th>
+              <th style="cursor:pointer;" onclick="sortTable('studentId')">Student ID <i class="fas fa-sort" style="opacity:0.4;margin-left:0.3rem;"></i></th>
+              <th class="hide-mobile">Department</th>
+              <th class="hide-mobile">Year</th>
+              <th>QR Code</th>
+              <th class="hide-mobile" style="cursor:pointer;" onclick="sortTable('createdAt')">Created <i class="fas fa-sort" style="opacity:0.4;margin-left:0.3rem;"></i></th>
+              <th style="width:100px;text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+      </div>
+      <!-- Empty state -->
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <i class="fas fa-inbox"></i>
+        <div style="font-weight:600;font-size:1rem;margin-bottom:0.3rem;">No students found</div>
+        <div style="color:var(--muted);font-size:0.84rem;">Add your first student record or adjust your filters</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ============ ADD/EDIT MODAL ============ -->
+<div class="modal-overlay" id="studentModal">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <h2 style="font-size:1.15rem;font-weight:700;" id="modalTitle">Add Student</h2>
+      <button class="btn-icon" onclick="closeModal('studentModal')" aria-label="Close modal"><i class="fas fa-times"></i></button>
+    </div>
+    <form id="studentForm" onsubmit="saveStudent(event)">
+      <input type="hidden" id="editKey">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;">
+        <div style="grid-column:span 2;">
+          <label style="font-size:0.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.35rem;">Full Name *</label>
+          <input id="fName" class="input-field" type="text" required placeholder="John Doe">
+        </div>
+        <div>
+          <label style="font-size:0.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.35rem;">Student ID *</label>
+          <input id="fStudentId" class="input-field" type="text" required placeholder="STU-2024-001">
+        </div>
+        <div>
+          <label style="font-size:0.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.35rem;">Track *</label>
+          <select id="fDept" class="input-field" required>
+            <option value="" disabled selected>Select a track</option>
+            <option value="AI">AI</option>
+            <option value="Networks">Networks</option>
+            <option value="Control">Control</option>
+          </select>
+          <!-- Hidden datalist kept to prevent the existing filter JS from throwing an error -->
+          <datalist id="deptSuggestions" style="display:none;"></datalist>
+        </div>
+        <div>
+          <label style="font-size:0.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.35rem;">Year</label>
+          <select id="fYear" class="input-field">
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+            <option value="5">5th Year</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.35rem;">Email</label>
+          <input id="fEmail" class="input-field" type="email" placeholder="john@university.edu">
+        </div>
+        <div style="grid-column:span 2;">
+          <label style="font-size:0.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.35rem;">QR Code String *</label>
+          <div style="display:flex;gap:0.5rem;">
+            <input id="fQR" class="input-field" type="text" required placeholder="The exact string encoded in the QR code" style="flex:1;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="generateQRString()" title="Auto-generate a unique QR string">
+              <i class="fas fa-magic"></i> Generate
+            </button>
+          </div>
+        </div>
+        <div style="grid-column:span 2;">
+          <label style="font-size:0.76rem;font-weight:600;color:var(--muted);display:block;margin-bottom:0.35rem;">Notes (optional)</label>
+          <input id="fNotes" class="input-field" type="text" placeholder="Any additional info...">
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1.5rem;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('studentModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="modalSubmitBtn">
+          <i class="fas fa-check"></i> Save Student
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ BULK ADD MODAL ============ -->
+<div class="modal-overlay" id="bulkModal">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <h2 style="font-size:1.15rem;font-weight:700;">Bulk Add Students</h2>
+      <button class="btn-icon" onclick="closeModal('bulkModal')" aria-label="Close modal"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem;line-height:1.6;">
+      Paste one student per line. Format: <code style="font-family:'JetBrains Mono',monospace;background:var(--surface);padding:0.1rem 0.4rem;border-radius:3px;">Name, StudentID, Department, Year, Email</code><br>
+      QR codes will be auto-generated. Year and Email are optional.
+    </div>
+    <textarea id="bulkInput" class="input-field" rows="8" placeholder="Alice Johnson, STU-001, Computer Science, 2, alice@uni.edu
+Bob Smith, STU-002, Electrical Engineering, 3
+Carol Williams, STU-003, Mathematics" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;resize:vertical;"></textarea>
+    <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1.2rem;">
+      <button class="btn btn-secondary" onclick="closeModal('bulkModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="processBulkAdd()">
+        <i class="fas fa-layer-group"></i> Add All
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ IMPORT MODAL ============ -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <h2 style="font-size:1.15rem;font-weight:700;">Import JSON Data</h2>
+      <button class="btn-icon" onclick="closeModal('importModal')" aria-label="Close modal"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem;line-height:1.6;">
+      Paste a JSON object. Each key becomes the QR code, and the value should contain student fields.
+      Or paste an array of student objects (QR codes will be auto-generated).
+    </div>
+    <textarea id="importInput" class="input-field" rows="10" placeholder='{
+  "QR-ABC123": {
+    "name": "Alice Johnson",
+    "studentId": "STU-001",
+    "department": "Computer Science",
+    "year": "2"
+  }
+}' style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;resize:vertical;"></textarea>
+    <div style="display:flex;align-items:center;gap:0.8rem;margin-top:1rem;">
+      <label style="font-size:0.8rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+        <input type="checkbox" id="importMerge" style="accent-color:var(--accent);">
+        Merge with existing data (don't overwrite)
+      </label>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:1.2rem;">
+      <button class="btn btn-secondary" onclick="closeModal('importModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="processImport()">
+        <i class="fas fa-file-import"></i> Import
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RAW DATA MODAL ============ -->
+<div class="modal-overlay" id="rawModal">
+  <div class="modal-box" style="max-width:680px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+      <h2 style="font-size:1.15rem;font-weight:700;">Raw Database View</h2>
+      <button class="btn-icon" onclick="closeModal('rawModal')" aria-label="Close modal"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
+      <button class="btn btn-secondary btn-sm" onclick="copyRawData()"><i class="fas fa-copy"></i> Copy</button>
+    </div>
+    <div class="json-viewer" id="rawDataViewer">Loading...</div>
+  </div>
+</div>
+
+<!-- ============ QR PREVIEW MODAL ============ -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal-box" style="max-width:360px;text-align:center;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+      <h2 style="font-size:1.15rem;font-weight:700;">QR Code Preview</h2>
+      <button class="btn-icon" onclick="closeModal('qrModal')" aria-label="Close modal"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="qrPreviewContent" style="margin-bottom:1rem;"></div>
+    <div id="qrStringDisplay" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--muted);word-break:break-all;background:var(--surface);padding:0.6rem;border-radius:0.4rem;margin-bottom:1rem;"></div>
+    <button class="btn btn-secondary btn-sm" onclick="copyQRString()"><i class="fas fa-copy"></i> Copy QR String</button>
+  </div>
+</div>
+
+<!-- ============ CONFIRM MODAL ============ -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box" style="max-width:400px;">
+    <div style="text-align:center;padding:0.5rem 0 1rem;">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,77,106,0.1);display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+        <i class="fas fa-trash-alt" style="color:var(--danger);font-size:1.1rem;"></i>
+      </div>
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;" id="confirmTitle">Delete Student</h2>
+      <p style="font-size:0.84rem;color:var(--muted);" id="confirmMsg">Are you sure? This cannot be undone.</p>
+    </div>
+    <div style="display:flex;gap:0.5rem;">
+      <button class="btn btn-secondary" style="flex:1;justify-content:center;" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn btn-danger" style="flex:1;justify-content:center;" id="confirmBtn" onclick="confirmAction()">Delete</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ===================================================================
+   STATE & CONFIG
+   =================================================================== */
+let db = null;
+let dbRef = null;
+let dbPath = 'students';
+let allStudents = {};  // key -> data
+let filteredKeys = [];
+let sortField = 'createdAt';
+let sortDir = -1; // -1 = desc
+let isDemoMode = false;
+let pendingConfirmAction = null;
+
+/* ===================================================================
+   TOAST SYSTEM
+   =================================================================== */
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+  toast.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.transition = 'opacity 0.3s';
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+/* ===================================================================
+   MODAL HELPERS
+   =================================================================== */
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = '';
+}
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+});
+// Close modals on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => {
+      m.classList.remove('active');
+    });
+    document.body.style.overflow = '';
+  }
+});
+
+/* ===================================================================
+   FIREBASE INIT & AUTHENTICATION
+   =================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAbRaFYMQp9aFrg4K1C1vWm6vTI-N4MT78",
+  authDomain: "id-admin-df300.firebaseapp.com",
+  databaseURL: "https://id-admin-df300-default-rtdb.firebaseio.com",
+  projectId: "id-admin-df300",
+  storageBucket: "id-admin-df300.firebasestorage.app",
+  messagingSenderId: "190211685140",
+  appId: "1:190211685140:web:d2472ec48acdd2aa1ce001"
+};
+
+// Initialize instantly
+firebase.initializeApp(firebaseConfig);
+db = firebase.database();
+dbPath = 'students';
+dbRef = db.ref(dbPath);
+const auth = firebase.auth();
+
+let isLoginMode = true;
+
+// Listen for login/logout state changes
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('authScreen').style.display = 'none';
+    showMainApp();
+    attachListener();
+  } else {
+    document.getElementById('mainApp').style.display = 'none';
+    document.getElementById('authScreen').style.display = 'flex';
+  }
+});
+
+function toggleAuthMode(event) {
+  isLoginMode = !isLoginMode;
+  document.getElementById('authTitle').textContent = isLoginMode ? 'Admin Login' : 'Create Admin';
+  document.getElementById('authBtn').textContent = isLoginMode ? 'Login' : 'Sign Up';
+  document.getElementById('authToggleText').textContent = isLoginMode ? "Don't have an account?" : "Already have an account?";
+  event.target.textContent = isLoginMode ? 'Sign Up' : 'Login';
+}
+
+function handleAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass = document.getElementById('authPassword').value;
+  
+  if (!email || !pass) {
+    showToast('Please enter both email and password', 'warn');
+    return;
+  }
+
+  if (isLoginMode) {
+    auth.signInWithEmailAndPassword(email, pass)
+      .then(() => showToast('Logged in successfully'))
+      .catch(err => showToast(err.message, 'error'));
+  } else {
+    auth.createUserWithEmailAndPassword(email, pass)
+      .then(() => showToast('Admin account created!'))
+      .catch(err => showToast(err.message, 'error'));
+  }
+}
+
+function logoutUser() {
+  auth.signOut().then(() => {
+    showToast('Logged out successfully', 'info');
+    allStudents = {}; // clear data from memory
+  });
+}
+
+function disconnectFirebase() {
+  if (dbRef) dbRef.off();
+  if (firebase.apps.length) firebase.app().delete();
+  db = null;
+  dbRef = null;
+  allStudents = {};
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('setupScreen').style.display = 'flex';
+  showToast('Disconnected', 'info');
+}
+
+/* ===================================================================
+   DEMO MODE — no Firebase needed
+   =================================================================== */
+function loadDemoData() {
+  isDemoMode = true;
+  db = null;
+  dbRef = null;
+  dbPath = 'students (demo)';
+
+  const depts = ['Computer Science', 'Electrical Engineering', 'Mathematics', 'Physics', 'Mechanical Engineering', 'Business Administration'];
+  const firstNames = ['Alice', 'Bob', 'Carol', 'David', 'Eva', 'Frank', 'Grace', 'Henry', 'Iris', 'Jack', 'Kate', 'Leo', 'Mia', 'Noah', 'Olivia', 'Paul', 'Quinn', 'Ruby', 'Sam', 'Tina'];
+  const lastNames = ['Johnson', 'Smith', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Chen', 'Kim', 'Patel', 'Anderson', 'Taylor', 'Thomas', 'Jackson', 'White', 'Harris', 'Clark'];
+
+  allStudents = {};
+  for (let i = 0; i < 18; i++) {
+    const fn = firstNames[i % firstNames.length];
+    const ln = lastNames[i % lastNames.length];
+    const dept = depts[i % depts.length];
+    const year = String((i % 4) + 1);
+    const qr = `QR-${fn.substring(0,3).toUpperCase()}-${String(i+1).padStart(3,'0')}`;
+    const daysAgo = Math.floor(Math.random() * 30);
+    const ts = Date.now() - daysAgo * 86400000;
+
+    allStudents[qr] = {
+      name: `${fn} ${ln}`,
+      studentId: `STU-${String(i+1).padStart(4,'0')}`,
+      department: dept,
+      year: year,
+      email: `${fn.toLowerCase()}.${ln.toLowerCase()}@uni.edu`,
+      qrCode: qr,
+      notes: '',
+      createdAt: ts
+    };
+  }
+
+  showToast('Demo mode loaded with 18 sample students', 'info');
+  showMainApp();
+  renderAll();
+}
+
+/* ===================================================================
+   REALTIME LISTENER
+   =================================================================== */
+function attachListener() {
+  dbRef.on('value', snap => {
+    allStudents = snap.val() || {};
+    renderAll();
+  });
+}
+
+function refreshData() {
+  if (isDemoMode) {
+    renderAll();
+    showToast('Data refreshed', 'info');
+    return;
+  }
+  if (dbRef) {
+    dbRef.once('value', snap => {
+      allStudents = snap.val() || {};
+      renderAll();
+      showToast('Data refreshed', 'info');
+    });
+  }
+}
+
+/* ===================================================================
+   SHOW MAIN APP
+   =================================================================== */
+function showMainApp() {
+  document.getElementById('mainApp').style.display = 'block';
+}
+/* ===================================================================
+   RENDERING
+   =================================================================== */
+function renderAll() {
+  renderStats();
+  renderDeptFilter();
+  filterTable();
+}
+
+function renderStats() {
+  const keys = Object.keys(allStudents);
+  const total = keys.length;
+  const depts = new Set();
+  let todayCount = 0;
+  const todayStart = new Date(); todayStart.setHours(0,0,0,0);
+  const todayTs = todayStart.getTime();
+
+  keys.forEach(k => {
+    const s = allStudents[k];
+    if (s && s.department) depts.add(s.department);
+    if (s && s.createdAt && s.createdAt >= todayTs) todayCount++;
+  });
+
+  animateNumber('statTotal', total);
+  animateNumber('statDepts', depts.size);
+  animateNumber('statRecent', todayCount);
+  animateNumber('statQR', total);
+}
+
+function animateNumber(id, target) {
+  const el = document.getElementById(id);
+  const current = parseInt(el.textContent) || 0;
+  if (current === target) return;
+  const diff = target - current;
+  const steps = Math.min(Math.abs(diff), 20);
+  const stepTime = 300 / steps;
+  let step = 0;
+  const timer = setInterval(() => {
+    step++;
+    const progress = step / steps;
+    el.textContent = Math.round(current + diff * progress);
+    if (step >= steps) {
+      el.textContent = target;
+      clearInterval(timer);
+    }
+  }, stepTime);
+}
+
+function renderDeptFilter() {
+  const select = document.getElementById('deptFilter');
+  const currentVal = select.value;
+  const depts = new Set();
+  Object.values(allStudents).forEach(s => {
+    if (s && s.department) depts.add(s.department);
+  });
+  const sorted = [...depts].sort();
+  select.innerHTML = '<option value="">All Departments</option>';
+  sorted.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    if (d === currentVal) opt.selected = true;
+    select.appendChild(opt);
+  });
+  // Also update datalist for form
+  const dl = document.getElementById('deptSuggestions');
+  dl.innerHTML = '';
+  sorted.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    dl.appendChild(opt);
+  });
+}
+
+function filterTable() {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const dept = document.getElementById('deptFilter').value;
+
+  filteredKeys = Object.keys(allStudents).filter(k => {
+    const s = allStudents[k];
+    if (!s) return false;
+    if (dept && s.department !== dept) return false;
+    if (search) {
+      const haystack = `${s.name} ${s.studentId} ${s.qrCode} ${s.department} ${s.email} ${s.notes || ''}`.toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+
+  // Sort
+  filteredKeys.sort((a, b) => {
+    const sa = allStudents[a], sb = allStudents[b];
+    let va, vb;
+    if (sortField === 'name') { va = (sa.name || '').toLowerCase(); vb = (sb.name || '').toLowerCase(); }
+    else if (sortField === 'studentId') { va = sa.studentId || ''; vb = sb.studentId || ''; }
+    else if (sortField === 'createdAt') { va = sa.createdAt || 0; vb = sb.createdAt || 0; }
+    else { va = sa[sortField] || ''; vb = sb[sortField] || ''; }
+    if (va < vb) return -1 * sortDir;
+    if (va > vb) return 1 * sortDir;
+    return 0;
+  });
+
+  renderTable();
+  document.getElementById('resultCount').textContent = `${filteredKeys.length} record${filteredKeys.length !== 1 ? 's' : ''}`;
+}
+
+function sortTable(field) {
+  if (sortField === field) {
+    sortDir *= -1;
+  } else {
+    sortField = field;
+    sortDir = field === 'createdAt' ? -1 : 1;
+  }
+  filterTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+
+  if (filteredKeys.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Department color map
+  const deptColors = {};
+  const palette = ['#00e5a0','#33b5ff','#ffb833','#ff4d6a','#a78bfa','#f472b6','#34d399','#fbbf24','#60a5fa','#fb923c'];
+  let colorIdx = 0;
+  Object.values(allStudents).forEach(s => {
+    if (s && s.department && !deptColors[s.department]) {
+      deptColors[s.department] = palette[colorIdx % palette.length];
+      colorIdx++;
+    }
+  });
+
+  let html = '';
+  filteredKeys.forEach((key, idx) => {
+    const s = allStudents[key];
+    const qrVal = s.qrCode || key;
+    const dc = deptColors[s.department] || '#6b7a94';
+    const created = s.createdAt ? new Date(s.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+    html += `<tr>
+      <td style="color:var(--muted);font-size:0.75rem;">${idx + 1}</td>
+      <td>
+        <div style="font-weight:600;font-size:0.86rem;">${escHtml(s.name || '—')}</div>
+        ${s.email ? `<div style="font-size:0.72rem;color:var(--muted);">${escHtml(s.email)}</div>` : ''}
+      </td>
+      <td><code style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;background:var(--surface);padding:0.15rem 0.45rem;border-radius:3px;">${escHtml(s.studentId || '—')}</code></td>
+      <td class="hide-mobile"><span class="badge" style="background:${dc}15;color:${dc};border:1px solid ${dc}30;">${escHtml(s.department || '—')}</span></td>
+      <td class="hide-mobile" style="color:var(--muted);">${s.year ? `Year ${s.year}` : '—'}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <canvas class="qr-mini" data-qr="${escAttr(qrVal)}" width="32" height="32" onclick="showQRPreview('${escAttr(qrVal)}')" title="Click to preview"></canvas>
+          <code style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escAttr(qrVal)}">${escHtml(qrVal)}</code>
+        </div>
+      </td>
+      <td class="hide-mobile" style="color:var(--muted);font-size:0.78rem;">${created}</td>
+      <td style="text-align:right;">
+        <div style="display:flex;gap:0.3rem;justify-content:flex-end;">
+          <button class="btn-icon" onclick="editStudent('${escAttr(key)}')" title="Edit" aria-label="Edit student"><i class="fas fa-pen" style="font-size:0.72rem;"></i></button>
+          <button class="btn-icon" onclick="deleteStudent('${escAttr(key)}')" title="Delete" aria-label="Delete student" style="color:var(--danger);border-color:rgba(255,77,106,0.2);"><i class="fas fa-trash-alt" style="font-size:0.72rem;"></i></button>
+        </div>
+      </td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+
+  // Draw mini QR codes
+  document.querySelectorAll('.qr-mini').forEach(canvas => {
+    drawMiniQR(canvas, canvas.dataset.qr);
+  });
+}
+
+/* ===================================================================
+   MINI QR CODE DRAWING (simple pixel QR encoding)
+   Using a lightweight approach: draw a stylized "QR-like" pattern
+   For actual QR codes, we use a canvas-based approach
+   =================================================================== */
+function drawMiniQR(canvas, text) {
+  const ctx = canvas.getContext('2d');
+  const s = 32;
+  ctx.clearRect(0, 0, s, s);
+
+  // Generate a deterministic pattern from the text
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+  }
+
+  const modules = 8;
+  const cellSize = s / modules;
+  ctx.fillStyle = '#1a1f2b';
+  ctx.fillRect(0, 0, s, s);
+
+  // Draw finder patterns (top-left, top-right, bottom-left) — QR style
+  ctx.fillStyle = '#00e5a0';
+  drawFinderPattern(ctx, 0, 0, cellSize);
+  drawFinderPattern(ctx, (modules - 3) * cellSize, 0, cellSize);
+  drawFinderPattern(ctx, 0, (modules - 3) * cellSize, cellSize);
+
+  // Fill data area with deterministic pattern
+  ctx.fillStyle = '#6b7a94';
+  let seed = Math.abs(hash);
+  for (let y = 0; y < modules; y++) {
+    for (let x = 0; x < modules; x++) {
+      // Skip finder pattern areas
+      if ((x < 3 && y < 3) || (x >= modules - 3 && y < 3) || (x < 3 && y >= modules - 3)) continue;
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      if (seed % 3 !== 0) {
+        ctx.fillRect(x * cellSize + 0.5, y * cellSize + 0.5, cellSize - 1, cellSize - 1);
+      }
+    }
+  }
+}
+
+function drawFinderPattern(ctx, x, y, cell) {
+  // Outer
+  ctx.fillStyle = '#00e5a0';
+  ctx.fillRect(x, y, cell * 3, cell * 3);
+  // Inner white
+  ctx.fillStyle = '#1a1f2b';
+  ctx.fillRect(x + cell * 0.5, y + cell * 0.5, cell * 2, cell * 2);
+  // Center dot
+  ctx.fillStyle = '#00e5a0';
+  ctx.fillRect(x + cell, y + cell, cell, cell);
+}
+
+/* ===================================================================
+   QR PREVIEW (larger)
+   =================================================================== */
+function showQRPreview(qrString) {
+  const container = document.getElementById('qrPreviewContent');
+  container.innerHTML = '';
+  const canvas = document.createElement('canvas');
+  canvas.width = 200;
+  canvas.height = 200;
+  canvas.style.borderRadius = '8px';
+  canvas.style.border = '2px solid var(--border)';
+  container.appendChild(canvas);
+  drawLargeQR(canvas, qrString);
+  document.getElementById('qrStringDisplay').textContent = qrString;
+  openModal('qrModal');
+}
+
+function drawLargeQR(canvas, text) {
+  const ctx = canvas.getContext('2d');
+  const s = 200;
+  const modules = 25;
+  const cellSize = s / modules;
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, s, s);
+
+  // Finder patterns
+  ctx.fillStyle = '#0c0f14';
+  drawFinderPatternLarge(ctx, 0, 0, cellSize);
+  drawFinderPatternLarge(ctx, (modules - 7) * cellSize, 0, cellSize);
+  drawFinderPatternLarge(ctx, 0, (modules - 7) * cellSize, cellSize);
+
+  // Timing patterns
+  ctx.fillStyle = '#0c0f14';
+  for (let i = 8; i < modules - 8; i++) {
+    if (i % 2 === 0) {
+      ctx.fillRect(i * cellSize, 6 * cellSize, cellSize, cellSize);
+      ctx.fillRect(6 * cellSize, i * cellSize, cellSize, cellSize);
+    }
+  }
+
+  // Data modules
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+  }
+  let seed = Math.abs(hash);
+  ctx.fillStyle = '#0c0f14';
+  for (let y = 0; y < modules; y++) {
+    for (let x = 0; x < modules; x++) {
+      // Skip finder + timing areas
+      if (x < 8 && y < 8) continue;
+      if (x >= modules - 8 && y < 8) continue;
+      if (x < 8 && y >= modules - 8) continue;
+      if (x === 6 || y === 6) continue;
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      if (seed % 2 === 0) {
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+}
+
+function drawFinderPatternLarge(ctx, x, y, cell) {
+  // Outer 7x7
+  ctx.fillStyle = '#0c0f14';
+  ctx.fillRect(x, y, cell * 7, cell * 7);
+  // White 5x5
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(x + cell, y + cell, cell * 5, cell * 5);
+  // Inner 3x3
+  ctx.fillStyle = '#0c0f14';
+  ctx.fillRect(x + cell * 2, y + cell * 2, cell * 3, cell * 3);
+}
+
+function copyQRString() {
+  const text = document.getElementById('qrStringDisplay').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('QR string copied'));
+}
+
+/* ===================================================================
+   ADD / EDIT / DELETE STUDENTS
+   =================================================================== */
+function generateQRString() {
+  const id = document.getElementById('fStudentId').value.trim();
+  const name = document.getElementById('fName').value.trim();
+  let base = id || name || 'QR';
+  base = base.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 8);
+  const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+  document.getElementById('fQR').value = `${base}-${rand}`;
+}
+
+function openAddModal() {
+  document.getElementById('modalTitle').textContent = 'Add Student';
+  document.getElementById('modalSubmitBtn').innerHTML = '<i class="fas fa-check"></i> Save Student';
+  document.getElementById('editKey').value = '';
+  document.getElementById('studentForm').reset();
+  document.getElementById('fYear').value = '1';
+  openModal('studentModal');
+  setTimeout(() => document.getElementById('fName').focus(), 200);
+}
+
+function editStudent(key) {
+  const s = allStudents[key];
+  if (!s) return;
+  document.getElementById('modalTitle').textContent = 'Edit Student';
+  document.getElementById('modalSubmitBtn').innerHTML = '<i class="fas fa-check"></i> Update Student';
+  document.getElementById('editKey').value = key;
+  document.getElementById('fName').value = s.name || '';
+  document.getElementById('fStudentId').value = s.studentId || '';
+  document.getElementById('fDept').value = s.department || '';
+  document.getElementById('fYear').value = s.year || '1';
+  document.getElementById('fEmail').value = s.email || '';
+  document.getElementById('fQR').value = s.qrCode || '';
+  document.getElementById('fNotes').value = s.notes || '';
+  openModal('studentModal');
+}
+
+function saveStudent(e) {
+  e.preventDefault();
+  const editKey = document.getElementById('editKey').value;
+  const qrCode = document.getElementById('fQR').value.trim();
+  const data = {
+    name: document.getElementById('fName').value.trim(),
+    studentId: document.getElementById('fStudentId').value.trim(),
+    department: document.getElementById('fDept').value.trim(),
+    year: document.getElementById('fYear').value,
+    email: document.getElementById('fEmail').value.trim(),
+    qrCode: qrCode,
+    notes: document.getElementById('fNotes').value.trim(),
+    createdAt: editKey && allStudents[editKey] ? allStudents[editKey].createdAt : Date.now()
+  };
+
+  // Check QR uniqueness
+  const existingKey = Object.keys(allStudents).find(k => k !== editKey && allStudents[k].qrCode === qrCode);
+  if (existingKey) {
+    showToast('This QR code string already exists for another student', 'error');
+    return;
+  }
+
+  if (isDemoMode) {
+    if (editKey) {
+      // In demo mode, if QR code changed, we need to re-key
+      if (editKey !== qrCode) {
+        delete allStudents[editKey];
+      }
+      allStudents[qrCode] = data;
+      showToast('Student updated');
+    } else {
+      allStudents[qrCode] = data;
+      showToast('Student added');
+    }
+    closeModal('studentModal');
+    renderAll();
+    return;
+  }
+
+  // Firebase write
+  if (editKey && editKey !== qrCode) {
+    // QR code changed — remove old key, write new
+    dbRef.child(editKey).remove();
+  }
+  const targetKey = qrCode;
+  dbRef.child(targetKey).set(data)
+    .then(() => {
+      showToast(editKey ? 'Student updated' : 'Student added');
+      closeModal('studentModal');
+    })
+    .catch(err => showToast('Save failed: ' + err.message, 'error'));
+}
+
+function deleteStudent(key) {
+  const s = allStudents[key];
+  if (!s) return;
+  document.getElementById('confirmTitle').textContent = 'Delete Student';
+  document.getElementById('confirmMsg').textContent = `Remove "${s.name}" (${s.studentId})? This cannot be undone.`;
+  pendingConfirmAction = () => {
+    if (isDemoMode) {
+      delete allStudents[key];
+      showToast('Student deleted');
+      renderAll();
+    } else {
+      dbRef.child(key).remove()
+        .then(() => showToast('Student deleted'))
+        .catch(err => showToast('Delete failed: ' + err.message, 'error'));
+    }
+  };
+  openModal('confirmModal');
+}
+
+function confirmAction() {
+  if (pendingConfirmAction) {
+    pendingConfirmAction();
+    pendingConfirmAction = null;
+  }
+  closeModal('confirmModal');
+}
+
+/* ===================================================================
+   BULK ADD
+   =================================================================== */
+function openBulkAddModal() {
+  document.getElementById('bulkInput').value = '';
+  openModal('bulkModal');
+}
+
+function processBulkAdd() {
+  const text = document.getElementById('bulkInput').value.trim();
+  if (!text) { showToast('No data to process', 'error'); return; }
+
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  let added = 0;
+  const batch = {};
+
+  lines.forEach(line => {
+    const parts = line.split(',').map(p => p.trim());
+    if (parts.length < 3) return;
+    const name = parts[0];
+    const studentId = parts[1];
+    const department = parts[2];
+    const year = parts[3] || '1';
+    const email = parts[4] || '';
+    const qrCode = `${studentId.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+
+    batch[qrCode] = {
+      name, studentId, department, year, email, qrCode,
+      notes: '',
+      createdAt: Date.now() + added
+    };
+    added++;
+  });
+
+  if (added === 0) {
+    showToast('No valid lines found. Format: Name, ID, Dept, Year, Email', 'error');
+    return;
+  }
+
+  if (isDemoMode) {
+    Object.assign(allStudents, batch);
+    showToast(`Added ${added} students`);
+    closeModal('bulkModal');
+    renderAll();
+    return;
+  }
+
+  dbRef.update(batch)
+    .then(() => {
+      showToast(`Added ${added} students`);
+      closeModal('bulkModal');
+    })
+    .catch(err => showToast('Bulk add failed: ' + err.message, 'error'));
+}
+
+/* ===================================================================
+   IMPORT / EXPORT
+   =================================================================== */
+function openImportModal() {
+  document.getElementById('importInput').value = '';
+  document.getElementById('importMerge').checked = true;
+  openModal('importModal');
+}
+
+function processImport() {
+  const text = document.getElementById('importInput').value.trim();
+  if (!text) { showToast('No data to import', 'error'); return; }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (e) {
+    showToast('Invalid JSON', 'error');
+    return;
+  }
+
+  const merge = document.getElementById('importMerge').checked;
+  let batch = {};
+
+  if (Array.isArray(parsed)) {
+    // Array of objects — auto-generate QR keys
+    parsed.forEach(item => {
+      const qrCode = item.qrCode || `${(item.studentId || 'ID').replace(/[^a-zA-Z0-9]/g, '').toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+      batch[qrCode] = {
+        name: item.name || '',
+        studentId: item.studentId || '',
+        department: item.department || '',
+        year: item.year || '1',
+        email: item.email || '',
+        qrCode: qrCode,
+        notes: item.notes || '',
+        createdAt: item.createdAt || Date.now()
+      };
+    });
+  } else if (typeof parsed === 'object') {
+    // Object — keys are QR codes
+    Object.entries(parsed).forEach(([key, val]) => {
+      if (typeof val === 'object' && val !== null) {
+        batch[key] = {
+          name: val.name || '',
+          studentId: val.studentId || '',
+          department: val.department || '',
+          year: val.year || '1',
+          email: val.email || '',
+          qrCode: key,
+          notes: val.notes || '',
+          createdAt: val.createdAt || Date.now()
+        };
+      }
+    });
+  }
+
+  const count = Object.keys(batch).length;
+  if (count === 0) {
+    showToast('No valid student records found in JSON', 'error');
+    return;
+  }
+
+  if (isDemoMode) {
+    if (merge) Object.assign(allStudents, batch);
+    else allStudents = batch;
+    showToast(`Imported ${count} students`);
+    closeModal('importModal');
+    renderAll();
+    return;
+  }
+
+  if (merge) {
+    dbRef.update(batch)
+      .then(() => { showToast(`Imported ${count} students (merged)`); closeModal('importModal'); })
+      .catch(err => showToast('Import failed: ' + err.message, 'error'));
+  } else {
+    dbRef.set(batch)
+      .then(() => { showToast(`Imported ${count} students (replaced all)`); closeModal('importModal'); })
+      .catch(err => showToast('Import failed: ' + err.message, 'error'));
+  }
+}
+
+function exportData() {
+  if (Object.keys(allStudents).length === 0) {
+    showToast('No data to export', 'error');
+    return;
+  }
+  const json = JSON.stringify(allStudents, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `qr-students-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Data exported as JSON');
+}
+
+/* ===================================================================
+   RAW DATA VIEWER
+   =================================================================== */
+function viewRawData() {
+  const viewer = document.getElementById('rawDataViewer');
+  // Pretty-print with syntax highlighting
+  const json = JSON.stringify(allStudents, null, 2);
+  viewer.innerHTML = syntaxHighlight(json);
+  openModal('rawModal');
+}
+
+function syntaxHighlight(json) {
+  json = escHtml(json);
+  return json.replace(
+    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+    function (match) {
+      let cls = 'color:#ff4d6a'; // number
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) {
+          cls = 'color:#33b5ff'; // key
+        } else {
+          cls = 'color:#00e5a0'; // string
+        }
+      } else if (/true|false/.test(match)) {
+        cls = 'color:#ffb833'; // boolean
+      } else if (/null/.test(match)) {
+        cls = 'color:#6b7a94'; // null
+      }
+      return '<span style="' + cls + '">' + match + '</span>';
+    }
+  );
+}
+
+function copyRawData() {
+  const json = JSON.stringify(allStudents, null, 2);
+  navigator.clipboard.writeText(json).then(() => showToast('Raw JSON copied'));
+}
+
+/* ===================================================================
+   UTILITIES
+   =================================================================== */
+function escHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+function escAttr(str) {
+  return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+/* ===================================================================
+   KEYBOARD SHORTCUTS
+   =================================================================== */
+document.addEventListener('keydown', e => {
+  // Ctrl+K = focus search
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    const search = document.getElementById('searchInput');
+    if (search && document.getElementById('mainApp').style.display !== 'none') {
+      search.focus();
+    }
+  }
+  // Ctrl+N = new student (when not in modal/input)
+  if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+    const tag = document.activeElement.tagName;
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !document.querySelector('.modal-overlay.active')) {
+      e.preventDefault();
+      openAddModal();
+    }
+  }
+});
+</script>
+
+</body>
+</html>
